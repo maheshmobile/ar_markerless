@@ -1,4 +1,183 @@
-<!DOCTYPE html><html><head><style>p {font-family: verdana;font-size: 400px;color: #FFFFFF;}</style>
+<html><head><title>Compass</title>
+<meta name="description" content="A web app compass.">
+<meta name="keywords" content="Compass">
+<meta name="author" content="Mason Brothers">
+<meta name="viewport" content="width=device-width, user-scalable=no">
+
+<style>
+h1 {
+	text-align: center;
+}
+
+body {
+	background: linear-gradient(white,#abddee,white);
+	height:100%;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+}
+
+p {
+	
+}
+
+table {
+	width=95%;
+}
+
+#footerbar {
+	border-color: black;
+}
+
+#footer {
+	text-align: center;
+	font-size: x-small;
+}
+
+
+#webAppTag {
+	text-align: center;
+}
+
+
+</style>
+
+</head><body>
+<h1>Compass</h1>
+
+<span id="statusTag"></span>
+<div id="webAppTag">
+<canvas id="compassTag">Sorry! Your browser does not support canvas!</canvas><br>
+<span id="directionTag"></span><br>
+<span id="angleTag"></span>&#176<br>
+</div>
+<script type="text/javascript">
+//document.write("<br>start<br>");
+
+var statusLabel = document.getElementById("statusTag");
+var angleLabel = document.getElementById("angleTag");
+var directionLabel = document.getElementById("directionTag");
+var compassLabel = document.getElementById("compassTag");
+var compass = compassLabel.getContext("2d");
+var webAppLabel = document.getElementById("webAppTag");
+
+
+
+
+var alphaRad, alphaDeg;
+var alphaDeg = 0;
+function radiansToDegrees(radians) 
+{
+	return radians*180/Math.PI;
+}
+
+function degreesToRadians(degrees) 
+{
+	return degrees/180*Math.PI;
+}
+
+function updateLabels()
+{
+	alphaRad = degreesToRadians(alphaDeg);
+	var angleDeg = alphaDeg;
+	angleLabel.innerHTML = Math.round(angleDeg);
+	directionLabel.innerHTML = getDirection(angleDeg);
+	drawCompass(angleDeg);
+}
+
+function drawCompass(degrees)
+{
+	var thetaDeg = degrees+270;
+	var thetaRad = degreesToRadians(thetaDeg);
+	var horiMid = compassLabel.width/2;//horizontal midpoint
+	var vertMid = compassLabel.height/2;//vertical midpoint
+	var radius = Math.min(horiMid,vertMid)*2/3
+	//Compass North is Theta Angle
+	
+	//compass.fillRect(radius*Math.cos(thetaRad)+horiMid,radius*Math.sin(thetaRad)+vertMid,2,2)
+	
+	compass.clearRect(0,0,compassTag.width,compassTag.height)
+	var northPart = new Path2D();
+	northPart.moveTo(radius/3*Math.cos(thetaRad+Math.PI/2)+horiMid,radius/3*Math.sin(thetaRad+Math.PI/2)+vertMid);
+	northPart.lineTo(radius*Math.cos(thetaRad)+horiMid,radius*Math.sin(thetaRad)+vertMid);
+	northPart.lineTo(radius/3*Math.cos(thetaRad-Math.PI/2)+horiMid,radius/3*Math.sin(thetaRad-Math.PI/2)+vertMid);
+	compass.fillStyle="red";
+	compass.fill(northPart);
+	
+	var southPart = new Path2D();
+	southPart.moveTo(radius/3*Math.cos(thetaRad+Math.PI/2+Math.PI)+horiMid,radius/3*Math.sin(thetaRad+Math.PI/2+Math.PI)+vertMid);
+	southPart.lineTo(radius*Math.cos(thetaRad+Math.PI)+horiMid,radius*Math.sin(thetaRad+Math.PI)+vertMid);
+	southPart.lineTo(radius/3*Math.cos(thetaRad-Math.PI/2+Math.PI)+horiMid,radius/3*Math.sin(thetaRad-Math.PI/2+Math.PI)+vertMid);
+	compass.fillStyle="white";
+	compass.fill(southPart);
+	
+}
+
+function getDirection(degrees)
+{
+	if (degrees >= 337.5 || degrees < 22.5)
+	{
+		return "N";
+	}
+	else if (degrees >= 22.5 && degrees < 67.5)
+	{
+		return "NE";
+	}
+	else if (degrees >= 67.5 && degrees < 112.5)
+	{
+		return "E";
+	}
+	else if (degrees >= 112.5 && degrees < 157.5)
+	{
+		return "SE";
+	}
+	else if (degrees >= 157.5 && degrees < 202.5)
+	{
+		return "S";
+	}
+	else if (degrees >= 202.5 && degrees < 247.5)
+	{
+		return "SW";
+	}
+	else if (degrees >= 247.5 && degrees < 292.5)
+	{
+		return "W";
+	}
+	else if (degrees >= 292.5 && degrees < 337.5)
+	{
+		return "NW";
+	}
+}
+
+setInterval(function() {updateLabels()}, 100);
+//;alphaDeg+=22.5
+
+window.ondeviceorientation = function(move){
+	//Rotation
+	//angle = move.rotationRate;
+	//if (angle != null) {
+	alphaDeg = move.alpha;
+}
+
+updateLabels();
+
+if(window.DeviceOrientationEvent)
+{
+	//statusLabel.innerHTML = "Works<br>";
+	//webAppLabel.style.display = "none";
+}
+else 
+{
+	statusLabel.innerHTML = "Sorry! You do not have orientation events activated. This application requires orientation events.<br>";
+	webAppLabel.style.display = "none";
+}
+
+//document.write("<br>end<br>");
+</script>
+<hr id="footerbar"><div id="footer">&#169 Copyright. Mason Brothers. 2015. All Rights Reserved.</div></div>
+
+</body><html>
+
+<!-- <!DOCTYPE html><html><head><style>p {font-family: verdana;font-size: 400px;color: #FFFFFF;}</style>
 
 <title>Compass</title>
 
@@ -50,7 +229,7 @@ else {
 </head>
 
 <body><br><br><p id="heading" style="text-align:center"></p></body>
-</html>
+</html> -->
 
 <!-- <!DOCTYPE html>
 <html>
