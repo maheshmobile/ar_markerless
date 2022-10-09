@@ -1,4 +1,60 @@
-<!doctype html>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fusion Compass</title>  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+</head>
+<body>
+  <h1>Compass with OrientationSensor</h1>
+    <div id="status"></div>
+
+    <div id="compassContainer">
+    <img src="https://purepng.com/public/uploads/large/purepng.com-compasscompassinstrumentnavigationcardinal-directionspointsdiagram-1701527842316onq7x.png" id="compass" hidden/>
+    </div>
+
+    <script>
+      let compass = document.getElementById('compass');
+      let status  = document.getElementById('status');
+
+      if ( 'AbsoluteOrientationSensor' in window ) {
+        compass.hidden = false;     
+        let sensor = new AbsoluteOrientationSensor();
+        sensor.addEventListener('reading', function(e) {
+          let q = e.target.quaternion;
+          heading = Math.atan2(2*q[0]*q[1] + 2*q[2]*q[3], 1 - 2*q[1]*q[1] - 2*q[2]*q[2])*(180/Math.PI);
+
+          let html =  'Heading in degrees: ' + heading;
+          //if(heading < 0) heading = 360 + heading;
+          var headingAdjusted = 270 + heading;
+          
+          //heading - 90;
+          console.log('adjusted heading Before: ' + headingAdjusted);
+          //headingAdjusted + 90;
+          //if(headingAdjusted > 360) headingAdjusted = headingAdjusted - 90;
+          console.log('adjusted heading After: ' + headingAdjusted);
+          //var test = 90 + headingAdjusted;
+          //var test = 80;
+          html += '<br>Adjusted:   ' + headingAdjusted;
+          status.innerHTML = html;
+          compass.style.Transform = 'rotate(' + headingAdjusted + 'deg)';
+          compass.style.WebkitTransform = 'rotate('+ headingAdjusted + 'deg)';
+          //compass.style.MozTransform = 'rotate(' + 90 + 'deg)';
+        });
+        sensor.start();
+      }
+      else status.innerHTML = 'AbsoluteOrientationSensor not supported';
+
+    </script>
+    <style>#compass{width:100%;max-width:400px;}</style>
+
+</body>
+</html>
+
+
+
+
+<!-- <!doctype html>
 <html>
 
 <head>
@@ -70,3 +126,4 @@ log(position);
 </body>
 
 </html>
+ -->
