@@ -1,4 +1,35 @@
-<html><head><title>Compass</title>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+  <title>Compass</title>
+</head>
+<body>
+  <img src = "comp1.png" id = "comp">
+  <p>Magnetic heading in <span id = "degree"></span></p>
+<!--   <script src="main.js"></script> -->
+	<script>
+		const line = document.querySelector('img')
+const direction = document.getElementById('degree')
+
+function deviceOrientationListener (event) {
+  let alpha = event.alpha
+  let degree = alpha > (360 - alpha) ? (360 - alpha) : alpha
+  direction.innerHTML = degree.toFixed(0) + '&deg'
+  line.style.transform = 'rotate(' + alpha + 'deg)'
+}
+
+if (window.DeviceOrientationEvent) {
+  window.addEventListener('deviceorientation', deviceOrientationListener)
+}
+	</script>
+</body>
+</html>
+
+
+
+
+<!-- <html><head><title>Compass</title>
 <meta name="description" content="A web app compass.">
 <meta name="keywords" content="Compass">
 <meta name="author" content="Mason Brothers">
@@ -175,7 +206,7 @@ else
 </script>
 <hr id="footerbar"><div id="footer">&#169 Copyright. Mason Brothers. 2015. All Rights Reserved.</div></div>
 
-</body><html>
+</body><html> -->
 
 <!-- <!DOCTYPE html><html><head><style>p {font-family: verdana;font-size: 400px;color: #FFFFFF;}</style>
 
